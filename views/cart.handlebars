@@ -1,0 +1,26 @@
+
+<h2>Carro</h2>
+<div class="cart detail">
+    {{#each products}}
+        <div class="product">
+            <h3>{{this.product.title}}</h3>
+            <div class="details">
+                <img
+                    src="/{{this.product.thumbnails}}"
+                    alt="foto producto"
+                    width="100"
+                />
+                <div class="info">
+                    <h4>{{this.product.description}}</h4>
+                    <p>Precio: ${{this.product.price}}</p>
+                    <p>Cantidad: {{this.quantity}}</p>
+                    <p>Código: {{this.product.code}}</p>
+                    <a
+                        href="../products/{{this.product._id}}"
+                        class="verproducto"
+                    >Ver Producto</a>
+                </div>
+            </div>
+        </div>
+    {{/each}}
+</div>

@@ -1,0 +1,56 @@
+<h3>Productos en tiempo real</h3>
+<form id="addproduct">
+    <h4>Agregar producto JSON</h4>
+    <form id="addProductForm">
+    <label for="title">Título:</label>
+    <input type="text" id="title" name="title" required>
+
+    <label for="description">Descripción:</label>
+    <textarea id="description" name="description" required></textarea>
+
+    <label for="price">Precio:</label>
+    <input type="number" id="price" name="price" step="0.01" required>
+
+    <label for="category">Categoría:</label>
+    <input type="text" id="category" name="category" required>
+
+    <label for="thumbnails">Imágenes (URL separadas por coma):</label>
+    <input type="text" id="thumbnails" name="thumbnails" required>
+
+    <label for="code">Código:</label>
+    <input type="text" id="code" name="code" required>
+
+    <label for="stock">Stock:</label>
+    <input type="number" id="stock" name="stock" required>
+
+    <input type="submit" value="Agregar producto">
+</form>
+</form>
+
+<div id="realtimeproducts">
+    {{#each products}}
+        <div id="product{{this.id}}">
+            <h4>{{this.title}}</h4>
+            <img
+                src="/{{this.thumbnails}}"
+                alt="foto producto"
+                width="100"
+            />
+            <p>{{this.description}}</p>
+            <p>Precio: ${{this.price}}</p>
+            <p>Categoría: {{this.category}}</p>
+            <p>Imagen: {{this.thumbnails}}</p>
+            <p>Status: {{this.status}}</p>
+            <p>Código: {{this.code}}</p>
+            <p>Stock: {{this.stock}}</p>
+            <input
+                type="button"
+                class="deleteproduct"
+                prodid="{{this.id}}"
+                value="Borrar este producto"
+            />
+        </div>
+    {{/each}}
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script src="../scripts/socketClient.js"></script>

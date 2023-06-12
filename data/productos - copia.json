@@ -1,0 +1,152 @@
+[
+    {
+    "_id": {
+      "$oid": "6478e9817a03d4625ddd0cda"
+    },
+    "title": "SSD",
+    "description": "240 GB",
+    "price": "7200.00",
+    "category": "Computacion",
+    "status": "true",
+    "thumbnails": [
+      "img1.png"
+    ],
+    "code": "11240",
+    "stock": "25"
+  },
+  {
+    "_id": {
+      "$oid": "6478e9817a03d4625ddd0cdb"
+    },
+    "title": "SSD",
+    "description": "500 GB",
+    "price": "13000.00",
+    "category": "Computacion",
+    "status": "true",
+    "thumbnails": [
+      "img2.png"
+    ],
+    "code": "11500",
+    "stock": "20"
+  },
+  {
+    "_id": {
+      "$oid": "6478e9817a03d4625ddd0cdc"
+    },
+    "title": "SSD",
+    "description": "1 TB",
+    "price": "20000.00",
+    "category": "Computacion",
+    "status": "true",
+    "thumbnails": [
+      "img3.png"
+    ],
+    "code": "11100",
+    "stock": "15"
+  },
+  {
+    "_id": {
+      "$oid": "6478e9817a03d4625ddd0cdd"
+    },
+    "title": "RAM",
+    "description": "Memoria ddr4 de 8GB",
+    "price": "8100.00",
+    "category": "Computacion",
+    "status": "true",
+    "thumbnails": [
+      "img4.png"
+    ],
+    "code": "12008",
+    "stock": "10"
+  },
+  {
+    "_id": {
+      "$oid": "6478e9817a03d4625ddd0cde"
+    },
+    "title": "RAM",
+    "description": "Memoria ddr4 de 16GB",
+    "price": "15000.00",
+    "category": "Computacion",
+    "status": "true",
+    "thumbnails": [
+      "img5.png"
+    ],
+    "code": "12016",
+    "stock": "15"
+  },
+  {
+    "_id": {
+      "$oid": "6478e9817a03d4625ddd0cdf"
+    },
+    "title": "Motherboard",
+    "description": "ASUS Z390",
+    "price": "20000.00",
+    "category": "Computacion",
+    "status": "true",
+    "thumbnails": [
+      "img6.png"
+    ],
+    "code": "13001",
+    "stock": "2"
+  },
+  {
+    "_id": {
+      "$oid": "6478e9817a03d4625ddd0ce0"
+    },
+    "title": "Motherboard",
+    "description": "H310M H 2.0",
+    "price": "20000.00",
+    "status": "disponible",
+    "category": "Computacion.",
+    "thumbnails": [
+      "img7.png"
+    ],
+    "code": "13002",
+    "stock": "5"
+  },
+  {
+    "_id": {
+      "$oid": "6478e9817a03d4625ddd0ce1"
+    },
+    "title": "Placa de video AsRock",
+    "description": "Radeon 570",
+    "price": "100000",
+    "status": "disponible",
+    "category": "Computacion",
+    "thumbnails": [
+      "img8.png"
+    ],
+    "code": "14001",
+    "stock": "3"
+  },
+  {
+    "_id": {
+      "$oid": "6478e9817a03d4625ddd0ce2"
+    },
+    "title": "Placa de Video AsRock",
+    "description": "Radeon RX550",
+    "price": "36000",
+    "status": "disponible",
+    "category": "Computacion",
+    "thumbnails": [
+      "img9.jpg"
+    ],
+    "code": "14002",
+    "stock": "5"
+  },
+  {
+    "_id": {
+      "$oid": "6478e9817a03d4625ddd0ce3"
+    },
+    "title": "SSD m.2 ",
+    "description": "1 Tera Byte",
+    "price": "30000",
+    "status": "disponible",
+    "category": "Computacion",
+    "thumbnails": [
+      "img10.jpg"
+    ],
+    "code": "11101",
+    "stock": "60"
+  }
+]

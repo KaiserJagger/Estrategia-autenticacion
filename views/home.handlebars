@@ -1,0 +1,14 @@
+<h3>Productos</h3>
+{{#each docs}}
+    <div>
+        <h4>{{this.title}}</h4>
+        <img src="/{{this.thumbnails}}"  alt="foto producto" width="100">
+        <p>{{this.description}}</p>
+        <p>Precio: ${{this.price}}</p>
+        <p>Categoría: {{this.category}}</p>
+        <p>Imagen: {{this.thumbnails}}</p>
+        <p>Status: {{this.status}}</p>
+        <p>Código: {{this.code}}</p>
+        <p>Stock: {{this.stock}}</p>
+    </div>
+{{/each}}

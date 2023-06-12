@@ -1,0 +1,19 @@
+
+<h2>{{title}}</h2>
+<div class="product detail">
+    <img
+        src="{{thumbnails}}"
+        alt="foto producto"
+        width="100"
+    />
+    <h3>{{description}}</h3>
+    <p>Precio: ${{price}}</p>
+    <p>Categoría: {{category}}</p>
+    <p>Imagen: {{thumbnails}}</p>
+    <p>Status: {{status}}</p>
+    <p>Código: {{code}}</p>
+    <p>Stock: {{stock}}</p>
+    <input class type="button" value="Agregar al carro" />
+    <a href="../products" class="verproducto">Ver todos los productos</a>
+    <a href='../products?query={"category":"{{category}}"}' class="verproducto">Ver Categoría</a>
+</div>

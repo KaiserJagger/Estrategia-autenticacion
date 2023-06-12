@@ -1,0 +1,25 @@
+<h2>Inicia Sessión</h2>
+<div class="user Login">
+    {{#if message }}
+    <div class="{{message.type}}">
+        <div class="title">{{message.title}}</div>
+        <div class="text">{{message.text}}</div>
+    </div>
+    {{/if}}
+    <form method="post" action="/login">
+        <label for="email">Correo electrónico</label>
+        <input name="email" type="email" required />
+        <label for="password">Contraseña</label>
+        <input name="password" type="password" required/>
+        <input type="submit" name="" id="" value="Enviar"/>
+    </form>
+
+    <div>
+        <a href="/githublogin">Login with Github</a>
+    </div>
+    
+    <div class="register">
+        <p>¿No tenés una cuenta?</p>
+        <a href="/register">Registrate</a>
+    </div>
+</div>
