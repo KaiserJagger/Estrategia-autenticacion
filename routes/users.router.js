@@ -1,28 +1,21 @@
 import { Router } from "express";
 import { UserManagerDB } from "../dao/UserManagerDB.js";
 import passport from "passport";
+import { generateToken, userLogged, passportAuthenticateApi } from "../utils.js";
+import dotenv from "dotenv"
+
+dotenv.config()
 
 const router = Router();
 const user = new UserManagerDB();
-router.get("/", (req, res) => {
-    if (req.session.user) {
-        res.redirect("/products");
-    } else {
-        res.render("login", {});
-    }
-});
 
-router.get("/login", (req, res) => {
-    if (req.session.user) {
-        res.redirect("/products");
-    } else {
-        res.render("login", {});
-    }
+router.get("/", userLogged("jwt"), (req, res) => {
+    res.render("login", {});
 });
-
-router.post(
-    "/login",
-    passport.authenticate("login", { failureRedirect: "/failurelogin" }),
+router.get("/login", userLogged("jwt"), (req, res) => {
+    res.render("login", {});
+});
+router.post("/login",passport.authenticate("login", { failureRedirect: "/failurelogin" }),
     async (req, res) => {
         if (!req.user) {
             res.render("login", {
@@ -36,25 +29,15 @@ router.post(
             delete req.user.password;
             delete req.user._id;
             delete req.user.__v;
-            req.session.user = req.user;
-            res.redirect("/products");
+            res.cookie(process.env.JWT_COOKIE_NAME, req.user.token).redirect("/products");
         }
     },
 );
 
-router.get("/register", (req, res) => {
-    if (req.session.user) {
-        res.redirect("/products");
-    } else {
-        res.render("register", {});
-    }
+router.get("/register", userLogged("jwt"), (req, res) => {
+    res.render("register", {});
 });
-
-router.post(
-    "/register",
-    passport.authenticate("register", {
-        failureRedirect: "failureregister",
-    }),
+router.post("/register",passport.authenticate("register", {failureRedirect: "failureregister",}),
     async (req, res) => {
         res.render("login", {
             message: {
@@ -67,15 +50,8 @@ router.post(
 );
 
 router.get("/logout", (req, res) => {
-    req.session.destroy((error) => {
-        if (error) {
-            res.status(500).render("errors", { error: error });
-        } else {
-            res.redirect("login");
-        }
-    });
+    res.clearCookie(process.env.JWT_COOKIE_NAME).redirect("login");
 });
-
 router.get("/failureregister", (req, res) => {
     res.render("register", {
         message: {
@@ -104,9 +80,21 @@ router.get("/githubcallback",passport.authenticate("github", { failureRedirect: 
         delete req.user.password;
         delete req.user._id;
         delete req.user.__v;
-        req.session.user = req.user;
-        res.redirect("/products");
+        const token = generateToken(req.user);
+        req.user.token = token;
+        res.cookie(process.env.JWT_COOKIE_NAME, req.user.token).redirect(
+            "/products",
+        );
     },
 );
+
+router.get("/current", passportAuthenticateApi("jwt"), (req, res) => {
+    if (!req.user) {
+        res.status(400).send({
+            error: "No existe una sesión de usuario activa",
+        });
+    }
+    res.send(req.user);
+});
 
 export default router;

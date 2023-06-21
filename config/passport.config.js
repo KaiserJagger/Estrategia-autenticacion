@@ -2,19 +2,20 @@ import passport from "passport";
 import local from "passport-local";
 import GitHubStrategy from "passport-github2";
 import { userModel } from "../dao/models/users.model.js";
-import { createHash, isValidPassword } from "../utils.js";
+import { createHash, isValidPassword, generateToken, extractCookie} from "../utils.js";
+import passport_jwt, { ExtractJwt } from 'passport-jwt'
 
 import dotenv from "dotenv";
 dotenv.config();
 
 const LocalStrategy = local.Strategy;
 const GithubStrategy = GitHubStrategy.Strategy;
+const JWTStrategy = passport_jwt.Strategy
+const JWTExtract = passport_jwt.ExtractJwt;
 
 const initializePassport = () => {
     // registro de usuario
-    passport.use(
-        "register",
-        new LocalStrategy(
+    passport.use("register",new LocalStrategy(
             {
                 passReqToCallback: true,
                 usernameField: "email",
@@ -40,10 +41,7 @@ const initializePassport = () => {
                         errortxt.push(
                             "password debe tener al entre 8 y 120 caracteres, al menos una mayúscula, una minúscula y un caracter especial.",
                         );
-                    const found = await userModel
-                        .findOne({ email: email })
-                        .lean()
-                        .exec();
+                    const found = await userModel.findOne({ email: email }).lean().exec();
                     if (found !== null) {
                         errortxt.push(
                             "Ya se encuentra un usuario registrado con el mismo correo electrónico.",
@@ -71,23 +69,23 @@ const initializePassport = () => {
     );
 
     // Local Strategy
-    passport.use(
-        "login",
-        new LocalStrategy(
+    passport.use("login",new LocalStrategy(
             { usernameField: "email" },
             async (username, password, done) => {
                 try {
                     if (
-                        username === "adminCoder@coder.com" &&
-                        password === "adminCod3r123"
+                        username === process.env.ADMIN_MAIL &&
+                        password === process.env.ADMIN_PASS
                     ) {
-                        adminuser = {
-                            first_name: "Admin",
+                       const adminuser = {
+                            first_name: "Admin", 
                             last_name: "Coder",
                             email: username,
                             age: -1,
                             role: "admin",
                         };
+                        const token = generateToken(adminuser);
+                        found.token = adminuser;
                         return done(null, adminuser);
                     } else {
                         const found = await userModel.findOne({
@@ -97,17 +95,23 @@ const initializePassport = () => {
                             found !== null &&
                             isValidPassword(found, password)
                         ) {
+                            const token = generateToken(found);
+                            found.token = token;
                             return done(null, found);
                         } else {
                             return done(null, false);
                         }
                     }
+                    
                 } catch (error) {
                     return done(error);
                 }
             },
         ),
     );
+
+
+
 
     // Github Strategy
     passport.use("github",new GithubStrategy(
@@ -121,8 +125,8 @@ const initializePassport = () => {
                 try {
                     const useremail = profile._json.email
                         ? profile._json.email
-                        : profile.emails[0].value;
-                    console.log(profile)
+                        : profile.emails[0].value
+
                     let user = await userModel.findOne({
                         email: useremail,
                     });
@@ -144,6 +148,7 @@ const initializePassport = () => {
             },
         ),
     );
+
     passport.serializeUser((user, done) => {
         done(null, user._id);
     });
@@ -151,6 +156,13 @@ const initializePassport = () => {
         const user = await userModel.findById(id);
         done(null, user);
     });
+
+    passport.use('jwt', new JWTStrategy({
+        jwtFromRequest: ExtractJwt.fromExtractors([extractCookie]), //donde leer el token
+        secretOrKey: process.env.JWT_PRIVATE_KEY
+    }, async(jwt_payload, done) => {
+        done(null, jwt_payload)
+    }) )
 };
 
 export default initializePassport;

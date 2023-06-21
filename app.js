@@ -3,8 +3,7 @@ import express from "express";
 import handlebars from "express-handlebars";
 import mongoose from "mongoose";
 import session from "express-session";
-import MongoStore from "connect-mongo";
-import __dirname from "./utils.js";
+import __dirname, { passportAuthenticate } from "./utils.js";
 import { messageModel } from "./dao/models/messageModel.js";
 import initializatePassport from "./config/passport.config.js";
 import passport from "passport";
@@ -21,6 +20,7 @@ import cartsRouter from "./routes/carts.router.js";
 import realTimeProductsRouter from "./routes/realtimeproducts.router.js";
 import chatRouter from "./routes/chat.router.js";
 import userRouter from "./routes/users.router.js";
+import cookieParser from "cookie-parser";
 
 mongoose.set("strictQuery", false);
 
@@ -38,29 +38,21 @@ app.set("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 
 // Configuracion de la session
+app.use(cookieParser());
 app.use(
     session({
-        store: MongoStore.create({
-            mongoUrl:
-                "mongodb+srv://NicoAndreolli:Nico1507veintiuno@clusters-ecommerce.42ewhbm.mongodb.net/",
-            dbName: "JaggerStore",
-            mongoOptions: {
-                useNewUrlParser: true,
-                useUnifiedTopology: true,
-            },
-            ttl: 14 * 24 * 60 * 60, //tiempo de vida
-        }),
-        secret: "c0d3r",
+        secret: process.env.SESSION_SECRET,
         resave: true,
         saveUninitialized: true,
-    }));
+    })
+);
 
-    initializatePassport()
-    app.use(passport.initialize())
-    app.use(passport.session())
+initializatePassport()
+app.use(passport.initialize())
+app.use(passport.session())
 
 // Configuracion de rutas
-app.use("/realtimeproducts", realTimeProductsRouter);
+app.use("/realtimeproducts",passportAuthenticate("jwt"),realTimeProductsRouter);
 app.use("/api/products", apiProductsRouter);
 app.use("/api/carts", apiCartsRouter);
 app.use("/products", productsRouter);
@@ -70,7 +62,6 @@ app.use("/", userRouter);
 
 //  Archivos estaticos
 app.use(express.static(__dirname + "/public"));
-
 
  //Conexion a la base de datos
 try {
