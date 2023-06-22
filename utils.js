@@ -1,16 +1,17 @@
 import bcrypt from "bcrypt";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
 import jwt from "jsonwebtoken";
 import passport from "passport";
 import dotenv from "dotenv";
+
 dotenv.config();
 
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 
-export const createHash = password => {
+export const createHash = (password) => {
     return bcrypt.hashSync(password, bcrypt.genSaltSync(10))
 }
 export const isValidPassword = (user, password) => {
@@ -19,7 +20,7 @@ export const isValidPassword = (user, password) => {
 export default __dirname;
 
 // GENERA TOKEN
-export const generateToken = user => {
+export const generateToken = (user) => {
     const token = jwt.sign({ user }, process.env.JWT_PRIVATE_KEY, {expiresIn: '24h'} )
     return token;
 }
@@ -47,6 +48,7 @@ export const passportAuthenticate = (strategy) => {
         })(req, res, next);
     };
 };
+
 export const userLogged = (strategy) => {
     return async (req, res, next) => {
         passport.authenticate(strategy, function (error, user, info) {
@@ -56,6 +58,7 @@ export const userLogged = (strategy) => {
         })(req, res, next);
     };
 };
+
 export const passportAuthenticateApi = (strategy) => {
     return async (req, res, next) => {
         passport.authenticate(strategy, function (error, user, info) {

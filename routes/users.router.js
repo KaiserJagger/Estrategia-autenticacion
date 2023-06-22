@@ -12,9 +12,11 @@ const user = new UserManagerDB();
 router.get("/", userLogged("jwt"), (req, res) => {
     res.render("login", {});
 });
+
 router.get("/login", userLogged("jwt"), (req, res) => {
     res.render("login", {});
 });
+
 router.post("/login",passport.authenticate("login", { failureRedirect: "/failurelogin" }),
     async (req, res) => {
         if (!req.user) {
@@ -37,6 +39,7 @@ router.post("/login",passport.authenticate("login", { failureRedirect: "/failure
 router.get("/register", userLogged("jwt"), (req, res) => {
     res.render("register", {});
 });
+
 router.post("/register",passport.authenticate("register", {failureRedirect: "failureregister",}),
     async (req, res) => {
         res.render("login", {
@@ -52,6 +55,7 @@ router.post("/register",passport.authenticate("register", {failureRedirect: "fai
 router.get("/logout", (req, res) => {
     res.clearCookie(process.env.JWT_COOKIE_NAME).redirect("login");
 });
+
 router.get("/failureregister", (req, res) => {
     res.render("register", {
         message: {

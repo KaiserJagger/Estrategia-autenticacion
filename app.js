@@ -8,7 +8,6 @@ import { messageModel } from "./dao/models/messageModel.js";
 import initializatePassport from "./config/passport.config.js";
 import passport from "passport";
 import dotenv from 'dotenv'
-dotenv.config()
 
 import { Server } from "socket.io";
 
@@ -23,7 +22,7 @@ import userRouter from "./routes/users.router.js";
 import cookieParser from "cookie-parser";
 
 mongoose.set("strictQuery", false);
-
+dotenv.config()
 //Puerto
 const port = 8080;
 
@@ -53,11 +52,11 @@ app.use(passport.session())
 
 // Configuracion de rutas
 app.use("/realtimeproducts",passportAuthenticate("jwt"),realTimeProductsRouter);
-app.use("/api/products", apiProductsRouter);
-app.use("/api/carts", apiCartsRouter);
-app.use("/products", productsRouter);
-app.use("/carts", cartsRouter);
-app.use("/chat", chatRouter);
+app.use("/api/products", passportAuthenticate("jwt"), apiProductsRouter);
+app.use("/api/carts", passportAuthenticate("jwt"), apiCartsRouter);
+app.use("/products", passportAuthenticate("jwt"), productsRouter);
+app.use("/carts", passportAuthenticate("jwt"), cartsRouter);
+app.use("/chat", passportAuthenticate("jwt"), chatRouter);
 app.use("/", userRouter);
 
 //  Archivos estaticos
@@ -66,7 +65,7 @@ app.use(express.static(__dirname + "/public"));
  //Conexion a la base de datos
 try {
     await mongoose.connect(
-        "mongodb+srv://NicoAndreolli:Nico1507veintiuno@clusters-ecommerce.42ewhbm.mongodb.net/JaggerStore",
+        "mongodb+srv://"+process.env.MONGO_USER+":"+process.env.MONGO_PASS+"@clusters-ecommerce.42ewhbm.mongodb.net/JaggerStore",
         {
             serverSelectionTimeoutMS: 5000,
         },
@@ -77,7 +76,6 @@ try {
     });
 
     const socketServer = new Server(httpServer);
-
 
     // Configuracion del Socket.io
     socketServer.on("connection", (socketClient) => {

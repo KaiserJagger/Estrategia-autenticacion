@@ -4,8 +4,8 @@ import GitHubStrategy from "passport-github2";
 import { userModel } from "../dao/models/users.model.js";
 import { createHash, isValidPassword, generateToken, extractCookie} from "../utils.js";
 import passport_jwt, { ExtractJwt } from 'passport-jwt'
-
 import dotenv from "dotenv";
+
 dotenv.config();
 
 const LocalStrategy = local.Strategy;
@@ -111,13 +111,11 @@ const initializePassport = () => {
     );
 
 
-
-
     // Github Strategy
     passport.use("github",new GithubStrategy(
             {
-                clientID:'Iv1.d2a7ee22d4c6f3d3',//process.env.CLIENT_ID,
-                clientSecret:'80c5ee1c48e1254c8cda0fd76e4d15ccb0ef7073', //process.env.CLIENT_SECRET,
+                clientID:process.env.CLIENT_ID,
+                clientSecret:process.env.CLIENT_SECRET,
                 callbackURL: "http://localhost:8080/githubcallback",
                 scope: ["user:email"],
             },
@@ -149,6 +147,13 @@ const initializePassport = () => {
         ),
     );
 
+    passport.use('jwt', new JWTStrategy({
+        jwtFromRequest: ExtractJwt.fromExtractors([extractCookie]), //donde leer el token
+        secretOrKey: process.env.JWT_PRIVATE_KEY
+    }, async(jwt_payload, done) => {
+        done(null, jwt_payload)
+    }) )
+
     passport.serializeUser((user, done) => {
         done(null, user._id);
     });
@@ -156,13 +161,6 @@ const initializePassport = () => {
         const user = await userModel.findById(id);
         done(null, user);
     });
-
-    passport.use('jwt', new JWTStrategy({
-        jwtFromRequest: ExtractJwt.fromExtractors([extractCookie]), //donde leer el token
-        secretOrKey: process.env.JWT_PRIVATE_KEY
-    }, async(jwt_payload, done) => {
-        done(null, jwt_payload)
-    }) )
 };
 
 export default initializePassport;
